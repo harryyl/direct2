@@ -24,11 +24,18 @@ if ($connection = OpenCon('direct2')) {
         refreshNumbers($connection);
 
     } else if (array_key_exists('view', $_POST)) {
-        getUserItems($connection, $_POST['userid']);
+        $toPrint = getUserItems($connection, $_POST['userid']);
+        foreach ($toPrint as $thing) {
+            echo $thing;
+        }
     }
 
     
-    getUsers($connection);
+    $users = getUsers($connection);
+    foreach ($users as $user) {
+        echo $user;
+    }
+
     echo '<a href="index.php"><button type="button">back home</button></a>';
 
 }

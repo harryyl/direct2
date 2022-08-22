@@ -25,9 +25,11 @@ function addUser($connection) {
         if ($_POST['name'] == null) {
 
         } else {
-            $sucess = $connection -> query("INSERT INTO USERS (name, gender) VALUES('".$_POST['name']."', '".$_POST['gender']."')");
+            $stmt = $connection->prepare("INSERT INTO USERS (name, gender) VALUES(?, ?)");
+            $stmt->bind_param('ss', $_POST['name'], $_POST['gender']);
+            $success = $stmt->execute();
         if ($success = true) {
-            echo '<h4>user added successfully</h4>';
+            return true;
         }
         }
         
@@ -38,12 +40,18 @@ function refreshNumbers($connection) {
 }
 
 function addItemToUser($connection, $itemno, $userno) {
-    $connection -> query('INSERT INTO `useritems` (uiItem, uiUser) VALUES ('.$itemno.', ('.$userno.'))');
+    $query = 'INSERT INTO `useritems` (uiItem, uiUser) VALUES (?, ?)';
+    $stmt = $connection->prepare($query);
+    $stmt->bind_param('ii', $itemno, $userno);
+    $stmt->execute();
 }
 
 function deleteUser($connection, $userid) {
-    $query = "DELETE FROM USERS WHERE userID='".$userid."'";
-    if ($success = $connection -> query($query)) {
+    
+    $query = "DELETE FROM USERS WHERE userID=?";
+    $stmt = $connection->prepare($query);
+    $stmt->bind_param('i', $userid);
+    if ($success = $stmt -> execute()) {
         return true;
     }
 }
@@ -60,28 +68,42 @@ function getItems($connection) : array{
 
 function getUsers($connection) {
     $result = $connection -> query('SELECT * FROM USERS');
+    $results = [];
     while ($obj = $result -> fetch_object()) {
-        echo '<h3> (user id: '.$obj->userID.') name is '.$obj->name.' and gender is '.$obj->gender.'. they\'ve purchased '.$obj->itemspurchased.' items  <form method="post"><input type="submit" name="delete" id="delete" value="delete user" /><input type="submit" name="purchase" id="purchase" value="add new purchase" /><input type="submit" name="view" id="view" value="view past purchases" /><input type="submit" name="insights" id="insights" value="view user insights" /><br/><input type="hidden" id="userid" name="userid" value="'.$obj->userID.'"></form>';
+        $results[] = '<h3> (user id: '.$obj->userID.') name is '.$obj->name.' and gender is '.$obj->gender.'. they\'ve purchased '.$obj->itemspurchased.' items  <form method="post"><input type="submit" name="delete" id="delete" value="delete user" /><input type="submit" name="purchase" id="purchase" value="add new purchase" /><input type="submit" name="view" id="view" value="view past purchases" /><input type="submit" name="insights" id="insights" value="view user insights" /><br/><input type="hidden" id="userid" name="userid" value="'.$obj->userID.'"></form>';
       }
+    return $results;
 }
 
 function getUserItems($connection, $userid) {
-    $query = 'SELECT `uiItem` FROM useritems WHERE `uiUser`='.$userid;
-        $result1 = $connection -> query($query);
-        $completeresult = [];
-        while($current = $result1->fetch_object()) {
+    $query = 'SELECT `uiItem` FROM useritems WHERE `uiUser`= ?';
+    $stmt = $connection->prepare($query);
+    $stmt-> bind_param('i', $userid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $completeresult = [];
+        while($current = $result->fetch_object()) {
             $itemid = $current->uiItem;
-            $query = 'SELECT `itemname`, `itemprice`, `itemsize`, `itemshade` FROM items WHERE itemid='.$itemid;
-            $result2 = ($connection -> query($query))-> fetch_object();
-            $query2 = 'SELECT COUNT(uiId) as quantity FROM useritems WHERE uiItem='.$itemid.' AND uiUser='.$userid;
-            $quantity = ($connection -> query($query2)) -> fetch_object();
+            $query = 'SELECT `itemname`, `itemprice`, `itemsize`, `itemshade` FROM items WHERE itemid=?';
+            $stmt2 = $connection->prepare($query);
+            $stmt2->bind_param('i', $itemid);
+            $stmt2->execute();
+            $result2 = ($stmt2->get_result())-> fetch_object();
+            //$query2 = 'SELECT COUNT(uiId) as quantity FROM useritems WHERE uiItem='.$itemid.' AND uiUser='.$userid;
+            $query2 = 'SELECT COUNT(uiId) as quantity FROM useritems WHERE uiItem= ? AND uiUser=?';
+            $stmt3 = $connection -> prepare($query2);
+            $stmt3->bind_param('ii', $itemid, $userid);
+            $stmt3->execute();
+            $quantity = ($stmt3->get_result()) -> fetch_object();
             $completeresult[] = array($result2->itemname, $result2->itemprice, $result2->itemsize, $result2->itemshade, $quantity->quantity);
         };
         $completeresult = array_unique($completeresult, SORT_REGULAR);
-        echo '<table><tr><th>product name</th><th>product price</th><th> product size</th><th> product shade</th><th>quantity</th></tr>';
+        $printableResults[] = '<table><tr><th>product name</th><th>product price</th><th> product size</th><th> product shade</th><th>quantity</th></tr>';
+
         foreach($completeresult as $product) {
-            echo '<tr> <td>'.$product[0].'</td><td>£'.$product[1].'</td><td>'.$product[2].'ml</td><td>'.$product[3].'</td><td>'.$product[4].'</tr>';
+            $printableResults[] = '<tr> <td>'.$product[0].'</td><td>£'.$product[1].'</td><td>'.$product[2].'ml</td><td>'.$product[3].'</td><td>'.$product[4].'</tr>';
         }
+        return $printableResults;
 }
  
 function CloseCon($conn)
