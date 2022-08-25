@@ -23,9 +23,10 @@ function OpenCon(string $db) {
 function addUser($connection) {
 
         if ($_POST['name'] == null) {
-
+            return false;
         } else {
             $stmt = $connection->prepare("INSERT INTO USERS (name, gender) VALUES(?, ?)");
+
             $stmt->bind_param('ss', $_POST['name'], $_POST['gender']);
             $success = $stmt->execute();
         if ($success = true) {
@@ -70,7 +71,7 @@ function getUsers($connection) {
     $result = $connection -> query('SELECT * FROM USERS');
     $results = [];
     while ($obj = $result -> fetch_object()) {
-        $results[] = '<h3> (user id: '.$obj->userID.') name is '.$obj->name.' and gender is '.$obj->gender.'. they\'ve purchased '.$obj->itemspurchased.' items  <form method="post"><input type="submit" name="delete" id="delete" value="delete user" /><input type="submit" name="purchase" id="purchase" value="add new purchase" /><input type="submit" name="view" id="view" value="view past purchases" /><input type="submit" name="insights" id="insights" value="view user insights" /><br/><input type="hidden" id="userid" name="userid" value="'.$obj->userID.'"></form>';
+        $results[] = '<h3> (user id: '.$obj->userID.') name is '.$obj->name.' and gender is '.$obj->gender.'. they\'ve purchased '.$obj->itemspurchased.' items  <form method="post"><input type="hidden" id="gottenusers" name="gottenusers" value="gottenusers"><input type="submit" name="delete" id="delete" value="delete user" /><input type="submit" name="purchase" id="purchase" value="add new purchase" /><input type="submit" name="view" id="view" value="view past purchases" /><input type="submit" name="insights" id="insights" value="view user insights" /><br/><input type="hidden" id="userid" name="userid" value="'.$obj->userID.'"></form>';
       }
     return $results;
 }

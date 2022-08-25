@@ -1,29 +1,21 @@
 <!DOCTYPE HTML>
 <html>
-<head><link rel="icon" href="pics/Untitled-1 Asset 1.png"></head>
-    <section class="indexpage">
-        
-        <img src="pics/IMG_0226.PNG">
-        <button type="button"><a href="users.php">view all users</a></button>
-        <button type="button"><a href="adduser.php">add user</a></button>
-    </section>
+<head><link rel="icon" href="pics/Untitled-1 Asset 1.png"><title>direct2</title></head>
+
 <?php
-
 require('bootstrap.php');
-
 if ($connection = OpenCon('direct2')) {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        addUser($connection);
+
+    if (array_key_exists('viewUsers', $_POST) || array_key_exists('gottenusers', $_POST) || array_key_exists('purchases', $_POST)) {
+        echo draw('pages/users.php');
+    } elseif (array_key_exists('addUser', $_POST) || array_key_exists('gender', $_POST)) {
+        echo draw('pages/adduser.php');
+    } else {
+        echo draw('pages/homepage.html');
     }
 
-    //getUsers($connection);
-
-    //echo '<h4>add user:</h4><form method="post"><label for="name">name:</label><input name="name" id="name" type="text"><label for="gender">gender:</label><input name="gender" id="gender" type="text"><button type="submit">Submit</button></form>';
-
 } else {
-    echo '<h2>connection not established</h2>';
+    echo draw('pages/errorpage.html');
 }
-
 ?>
-
 </html>
