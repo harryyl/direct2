@@ -7,6 +7,16 @@ img {
     height: auto;
 
 }
+.profilepic {
+    display: flex;
+    white-space: nowrap;
+    flex-direction: row;
+    max-width: 20vh;
+    align-items:center;
+    justify-content: center;
+    height: auto;
+    padding-left: 9rem;
+}
 .indexpage {
     display: flex;
     flex-direction: column;

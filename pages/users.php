@@ -17,12 +17,10 @@ if ($connection = OpenCon('direct2')) {
             echo '<option value="'.$item[2].'">'.$item[0].' - '.$item[3].' '.$item[1].'ml</option>';
         }
         echo '</select><input type="hidden" id="userid" name="userid" value="'.$_POST['userid'].'"><input type="submit" value="submit"></form>';
-        echo '<form><button type="submit">cancel</button></form>';
+        echo '<form method="POST"><input type="submit" value="cancel" name ="viewUsers"></form>';
     } else if (array_key_exists('purchases', $_POST)) {
-
         addItemToUser($connection, $_POST['purchases'], $_POST['userid']);       
         refreshNumbers($connection);
-
     } else if (array_key_exists('view', $_POST)) {
         $toPrint = getUserItems($connection, $_POST['userid']);
         foreach ($toPrint as $thing) {
