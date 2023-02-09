@@ -1,0 +1,125 @@
+* {
+    font-family:'Open Sans', Courier, monospace;
+    padding: 3px;
+}
+.nav {
+    background-color: hwb(0 20% 80%);
+    overflow: hidden;
+    
+    margin: 10px;
+  }
+.transactions {
+    display:flex;
+    border: 1px solid black;
+    width:fit-content;
+}
+.nav label {
+    color:aliceblue;
+}
+.profView {
+    width:fit-content;
+    height:fit-content;
+    display:flex;
+}
+.nav a {
+    color:aliceblue;
+    float: right;
+    padding: 0px 16px;
+}
+.aboutYou{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.aboutYou div {
+    border: solid;
+    border-inline: 1rem;
+}
+.yourStore {
+    display:flex;
+    flex-direction: column;
+    border: solid;
+    width: fit-content;
+}
+.moreinfo {
+    display:flex;
+    flex-direction: row;
+    gap: 1rem;
+
+}
+.authorized {
+    display:flex;
+    flex-direction: row;
+    border:0.1rem solid black;
+    gap: 1rem;
+    width:fit-content;
+    margin: auto;
+    background-color: #b5bab6;
+}
+.authorized img {
+    height: auto;
+    
+}
+.searchbox {
+    display:flex;
+    border: 0.1rem solid black;
+    width: fit-content;
+    
+}
+.storesTable th {
+    border: 0.1rem solid grey;
+}
+.yourStore div {
+    width: fit-content;
+}
+.title {
+    background-color: #9d9fa3;
+}
+.titleProfile {
+    background-color: #ACE1AF;
+}
+img {
+    max-width: 100%;
+    height: auto;
+
+}
+.profilepic {
+    display: flex;
+    white-space: nowrap;
+    flex-direction: row;
+    max-width: 20vh;
+    align-items:center;
+    justify-content: center;
+    height: auto;
+    padding-left: 9rem;
+}
+.indexpage {
+    display: flex;
+    flex-direction: column;
+    max-width: 50%;
+    align-items:center;
+    justify-content: center;
+}
+.indexpage button {
+    text-decoration: none;
+}
+.indexpage a {
+    color: black;
+}
+
+
+
+/* open-sans-regular - latin */
+@font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: url('fonts/open-sans-v34-latin-regular.eot'); /* IE9 Compat Modes */
+    src: local(''),
+         url('fonts/open-sans-v34-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('fonts/open-sans-v34-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+         url('fonts/open-sans-v34-latin-regular.woff') format('woff'), /* Modern Browsers */
+         url('fonts/open-sans-v34-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('fonts/open-sans-v34-latin-regular.svg#OpenSans') format('svg'); /* Legacy iOS */
+  }
+  
